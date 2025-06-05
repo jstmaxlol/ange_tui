@@ -1,0 +1,13 @@
+![banner2x](https://github.com/user-attachments/assets/88aab9f6-6808-44d4-b34d-9ca232ee03e9)
+
+<!DOCTYPE html>
+<body>
+    <p>
+        <b>ange_tui</b> is the cutest & simplest <b>C/C++</b> TUI header-only library<i>!</i>
+    </p>
+    <hr>
+    <h1>documentation</h1>
+    <p>
+        <i># i will leave the doxygen documentation files in the repo</i>
+    </p>
+</body>
