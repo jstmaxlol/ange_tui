@@ -1,6 +1,6 @@
 // ange_tui (ANGE)
 // repo: github.com/jstmaxlol/ange_tui
-// version: 1.1
+// version: 1.2
 
 #ifndef ANGE
 #define ANGE
@@ -241,11 +241,15 @@ void angeClear() {
 /**
  * @brief Prints a paragraph of text aligned within the terminal width.
  * 
+ * Initializes the TUI if not already initialized.
+ * 
  * @param text The null-terminated string to print.
  * @param align The alignment mode (left, center, right).
  * @param term_width The width of the terminal in characters.
  */
 static void angePrintP(const char* text, ange_align_t align, int term_width) {
+    if (!ange_initialized) angeInit();
+
     int len = strlen(text);
     int pad = 0;
 
@@ -256,7 +260,7 @@ static void angePrintP(const char* text, ange_align_t align, int term_width) {
     }
 
     if (pad < 0) pad = 0;
-    printf("\033[H%*s%s\n", pad, "", text);
+    printf("\n%*s%s\n", pad, "", text);
     fflush(stdout);
 }
 
@@ -273,6 +277,22 @@ static void angePrintP_Unaligned(const char* text) {
 
     printf("\033[H%s\n", text);
     fflush(stdout);
+}
+
+// ANGE_PRINT_PARAGRAPH_Y_ALIGN
+/**
+ * @brief Prints a paragraph of text with vertical alignment
+ * 
+ * Initializes the TUI if not already initialized (through angePrintP)
+ * 
+ * @param text The null-terminated string to print.
+ * @param y_padding_amount The amount of vertical (y-axis) padding to insert
+ */
+static void angePrintP_yAlign(const char* text, int y_padding_amount) {
+    for (int i = 0; i < y_padding_amount; ++i) {
+        printf("\n");
+    }
+    angePrintP_Unaligned(text);
 }
 
 // ANGE_PRINT_HEADER
@@ -307,9 +327,9 @@ static void angeDrawButton(ange_button_t* buttons, int count, int selected_index
     printf("\033[H");
     for (int i = 0; i < count; i++) {
         if (i == selected_index)
-            printf("➤ [%s]\n", buttons[i].label);
+            printf("[ %s ]\n", buttons[i].label);
         else
-            printf("  [%s]\n", buttons[i].label);
+            printf("[ %s ]\n", buttons[i].label);
     }
     fflush(stdout);
 }
