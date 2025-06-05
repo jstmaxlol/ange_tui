@@ -1,6 +1,6 @@
 // ange_tui (ANGE)
 // repo: github.com/jstmaxlol/ange_tui
-// version: 1
+// version: 1.1
 
 #ifndef ANGE
 #define ANGE
@@ -286,8 +286,12 @@ static void angePrintP_Unaligned(const char* text) {
 static void angePrintHeader(const char* text) {
     int hasFiglet = system("figlet -v > /dev/null 2>&1");
     char command[512];
-    snprintf(command, sizeof(command), "figlet \"%s\"", text);
-    system(command);
+    if (hasFiglet == 0) {
+        snprintf(command, sizeof(command), "figlet \"%s\"", text);
+        system(command);
+    } else {
+        printf(text); // Fallback to crappy visualizing
+    }
     fflush(stdout);
 }
 
