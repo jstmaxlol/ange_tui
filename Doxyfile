@@ -1,0 +1,51 @@
+# Doxyfile 1.9.7
+
+# Project related settings
+PROJECT_NAME           = "ange_tui / ANGE"
+PROJECT_BRIEF          = "The cutest & simplest C/C++ TUI header-only library!"
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+
+# Input
+INPUT                  = ./ange.h
+FILE_PATTERNS          = *.h
+RECURSIVE              = NO
+
+# Build related settings
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = YES
+
+# Output formats
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+
+# HTML options
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            =
+HTML_FOOTER            =
+
+# Source browsing
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+
+# Warnings and errors
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_FORMAT            = "$file:$line: $text"
+
+# Input filtering
+INPUT_ENCODING         = UTF-8
+
+# Others
+QUIET                  = NO
+GENERATE_TREEVIEW      = YES
+
