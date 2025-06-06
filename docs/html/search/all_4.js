@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['options_0',['options',['../structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0',1,'ange_radio_group_t']]]
+  ['label_0',['label',['../structange__button__t.html#ae484376b1275056599761811f76d16ac',1,'ange_button_t::label'],['../structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4',1,'ange_radio_option_t::label'],['../structange__navitem__t.html#a462793161e05636ffbb994f5a6189355',1,'ange_navitem_t::label']]]
 ];

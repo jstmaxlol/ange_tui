@@ -116,6 +116,7 @@ $(function(){initNavTree('ange_8h.html',''); initResizable(true); });
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;termios.h&gt;</code><br />
+<code>#include &lt;sys/select.h&gt;</code><br />
 </div>
 <p><a href="ange_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -126,9 +127,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structange__button__t.html">ange_button_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a button element.  <a href="structange__button__t.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structange__checkbox__t.html">ange_checkbox_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a checkbox element.  <a href="structange__checkbox__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structange__radio__option__t.html">ange_radio_option_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a single radio option.  <a href="structange__radio__option__t.html#details">More...</a><br /></td></tr>
@@ -145,13 +143,15 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a2fb03dab3b13f314a48f48c2107a1961" id="r_a2fb03dab3b13f314a48f48c2107a1961"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961">ange_key_t</a> { <br />
 &#160;&#160;<a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a> = 0
 , <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>
+, <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a">ANGE_KEY_BACKSPACE</a>
 , <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>
-, <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>
 , <br />
-&#160;&#160;<a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>
+&#160;&#160;<a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>
+, <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>
 , <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>
 , <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>
-, <a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>
+, <br />
+&#160;&#160;<a class="el" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a2fb03dab3b13f314a48f48c2107a1961"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum representing supported key input types.  <a href="#a2fb03dab3b13f314a48f48c2107a1961">More...</a><br /></td></tr>
@@ -165,12 +165,15 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aedad6dd410b289ba1d10f3995e575d73" id="r_aedad6dd410b289ba1d10f3995e575d73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aedad6dd410b289ba1d10f3995e575d73">SaveCurPos</a> ()</td></tr>
-<tr class="memdesc:aedad6dd410b289ba1d10f3995e575d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Development use) Saves the current cursor position in the terminal.  <br /></td></tr>
-<tr class="separator:aedad6dd410b289ba1d10f3995e575d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af05ba9ca336b98cd29c5242f4d4098d8" id="r_af05ba9ca336b98cd29c5242f4d4098d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af05ba9ca336b98cd29c5242f4d4098d8">RestoreCur</a> ()</td></tr>
-<tr class="memdesc:af05ba9ca336b98cd29c5242f4d4098d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Development use) Restores the cursor position previously saved.  <br /></td></tr>
-<tr class="separator:af05ba9ca336b98cd29c5242f4d4098d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39aa811600c79445f7d4d7f051bb7218" id="r_a39aa811600c79445f7d4d7f051bb7218"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39aa811600c79445f7d4d7f051bb7218">SaveCurPos</a> ()</td></tr>
+<tr class="memdesc:a39aa811600c79445f7d4d7f051bb7218"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Development use) Saves the current cursor position in the terminal.  <br /></td></tr>
+<tr class="separator:a39aa811600c79445f7d4d7f051bb7218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e1c1a6d6b1ff63910e5211fb1e43ccc" id="r_a2e1c1a6d6b1ff63910e5211fb1e43ccc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e1c1a6d6b1ff63910e5211fb1e43ccc">RestoreCurPos</a> ()</td></tr>
+<tr class="memdesc:a2e1c1a6d6b1ff63910e5211fb1e43ccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Development use) Restores the cursor position previously saved.  <br /></td></tr>
+<tr class="separator:a2e1c1a6d6b1ff63910e5211fb1e43ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bcf2364f90fbcac00266c9551d66834" id="r_a0bcf2364f90fbcac00266c9551d66834"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bcf2364f90fbcac00266c9551d66834">getColSize</a> ()</td></tr>
+<tr class="memdesc:a0bcf2364f90fbcac00266c9551d66834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns integer value to terminal coloumn size.  <br /></td></tr>
+<tr class="separator:a0bcf2364f90fbcac00266c9551d66834"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c141267ebc187b9a82c2eac9624744d" id="r_a7c141267ebc187b9a82c2eac9624744d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structange__input__t.html">ange_input_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a> (void)</td></tr>
 <tr class="memdesc:a7c141267ebc187b9a82c2eac9624744d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a key press from standard input and returns it as an <a class="el" href="structange__input__t.html" title="Represents a keyboard input event.">ange_input_t</a> structure.  <br /></td></tr>
 <tr class="separator:a7c141267ebc187b9a82c2eac9624744d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,27 +183,27 @@ Functions</h2></td></tr>
 <tr class="memitem:aef5387e1fbc9d9d24c7f0ea63c941042" id="r_aef5387e1fbc9d9d24c7f0ea63c941042"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef5387e1fbc9d9d24c7f0ea63c941042">angeKill</a> (void)</td></tr>
 <tr class="memdesc:aef5387e1fbc9d9d24c7f0ea63c941042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores the terminal to its original settings and shows the cursor.  <br /></td></tr>
 <tr class="separator:aef5387e1fbc9d9d24c7f0ea63c941042"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aada6f72e0a98797f48ca131da809d95b" id="r_aada6f72e0a98797f48ca131da809d95b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aada6f72e0a98797f48ca131da809d95b">angeClearScreen</a> ()</td></tr>
-<tr class="memdesc:aada6f72e0a98797f48ca131da809d95b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the screen.  <br /></td></tr>
-<tr class="separator:aada6f72e0a98797f48ca131da809d95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74d567f8b86576d49be7d5a9fd0c6836" id="r_a74d567f8b86576d49be7d5a9fd0c6836"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74d567f8b86576d49be7d5a9fd0c6836">angePrintP</a> (const char *text, <a class="el" href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a> align, int term_width)</td></tr>
-<tr class="memdesc:a74d567f8b86576d49be7d5a9fd0c6836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a paragraph of text aligned within the terminal width.  <br /></td></tr>
-<tr class="separator:a74d567f8b86576d49be7d5a9fd0c6836"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1e848df713b22ccf96ed9e2933fdcdc" id="r_ae1e848df713b22ccf96ed9e2933fdcdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1e848df713b22ccf96ed9e2933fdcdc">angeClear</a> ()</td></tr>
+<tr class="memdesc:ae1e848df713b22ccf96ed9e2933fdcdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the screen.  <br /></td></tr>
+<tr class="separator:ae1e848df713b22ccf96ed9e2933fdcdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a134dc9da3bda896f95623cd937fb26b3" id="r_a134dc9da3bda896f95623cd937fb26b3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a134dc9da3bda896f95623cd937fb26b3">angePrintP</a> (const char *text, <a class="el" href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a> align)</td></tr>
+<tr class="memdesc:a134dc9da3bda896f95623cd937fb26b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a paragraph of text aligned within the terminal width.  <br /></td></tr>
+<tr class="separator:a134dc9da3bda896f95623cd937fb26b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07ce380cba0bf6674691eaf2bd9eba59" id="r_a07ce380cba0bf6674691eaf2bd9eba59"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07ce380cba0bf6674691eaf2bd9eba59">angePrintP_Unaligned</a> (const char *text)</td></tr>
 <tr class="memdesc:a07ce380cba0bf6674691eaf2bd9eba59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a paragraph of text without any alignment (left aligned by default).  <br /></td></tr>
 <tr class="separator:a07ce380cba0bf6674691eaf2bd9eba59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1584dc4f5c2938800a779f73f9fa4a0" id="r_aa1584dc4f5c2938800a779f73f9fa4a0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1584dc4f5c2938800a779f73f9fa4a0">angePrintP_yAlign</a> (const char *text, int y_padding_amount)</td></tr>
+<tr class="memdesc:aa1584dc4f5c2938800a779f73f9fa4a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a paragraph of text with vertical alignment.  <br /></td></tr>
+<tr class="separator:aa1584dc4f5c2938800a779f73f9fa4a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb730b36dec039b9736cd6bf021783e7" id="r_aeb730b36dec039b9736cd6bf021783e7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb730b36dec039b9736cd6bf021783e7">angePrintHeader</a> (const char *text)</td></tr>
-<tr class="memdesc:aeb730b36dec039b9736cd6bf021783e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a header line with styling.  <br /></td></tr>
+<tr class="memdesc:aeb730b36dec039b9736cd6bf021783e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a header line with larger size.  <br /></td></tr>
 <tr class="separator:aeb730b36dec039b9736cd6bf021783e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1448ca3aa72d8fa657753d98cb7f8cff" id="r_a1448ca3aa72d8fa657753d98cb7f8cff"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1448ca3aa72d8fa657753d98cb7f8cff">angeInputButton</a> (<a class="el" href="structange__button__t.html">ange_button_t</a> *buttons, int count)</td></tr>
-<tr class="memdesc:a1448ca3aa72d8fa657753d98cb7f8cff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a list of buttons and handles user input to select one.  <br /></td></tr>
-<tr class="separator:a1448ca3aa72d8fa657753d98cb7f8cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05667f7f6f6bb8f57a7a53376825755e" id="r_a05667f7f6f6bb8f57a7a53376825755e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05667f7f6f6bb8f57a7a53376825755e">angeDrawButton</a> (<a class="el" href="structange__button__t.html">ange_button_t</a> *buttons, int count, int selected_index)</td></tr>
 <tr class="memdesc:a05667f7f6f6bb8f57a7a53376825755e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws buttons with one selected but does not handle user input.  <br /></td></tr>
 <tr class="separator:a05667f7f6f6bb8f57a7a53376825755e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1fd65076825d41074ce0fd60754440d" id="r_aa1fd65076825d41074ce0fd60754440d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1fd65076825d41074ce0fd60754440d">angeInputCheckboxes</a> (<a class="el" href="structange__checkbox__t.html">ange_checkbox_t</a> *boxes, int count)</td></tr>
-<tr class="memdesc:aa1fd65076825d41074ce0fd60754440d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays a list of checkboxes and lets the user toggle them.  <br /></td></tr>
-<tr class="separator:aa1fd65076825d41074ce0fd60754440d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1448ca3aa72d8fa657753d98cb7f8cff" id="r_a1448ca3aa72d8fa657753d98cb7f8cff"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1448ca3aa72d8fa657753d98cb7f8cff">angeInputButton</a> (<a class="el" href="structange__button__t.html">ange_button_t</a> *buttons, int count)</td></tr>
+<tr class="memdesc:a1448ca3aa72d8fa657753d98cb7f8cff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a list of buttons and handles user input to select one.  <br /></td></tr>
+<tr class="separator:a1448ca3aa72d8fa657753d98cb7f8cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad472f7b34c037858f270473d92469e9a" id="r_ad472f7b34c037858f270473d92469e9a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad472f7b34c037858f270473d92469e9a">angeInputRadio</a> (<a class="el" href="structange__radio__group__t.html">ange_radio_group_t</a> *group)</td></tr>
 <tr class="memdesc:ad472f7b34c037858f270473d92469e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays a group of radio options and lets the user select one.  <br /></td></tr>
 <tr class="separator:ad472f7b34c037858f270473d92469e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,16 +247,16 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00151">151</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  151</span>             {</div>
-<div class="line"><span class="lineno">  152</span>    <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9">ANGE_ALIGN_LEFT</a>,    </div>
-<div class="line"><span class="lineno">  153</span>    <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b">ANGE_ALIGN_CENTER</a>,  </div>
-<div class="line"><span class="lineno">  154</span>    <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1">ANGE_ALIGN_RIGHT</a>    </div>
-<div class="line"><span class="lineno">  155</span>} <a class="code hl_enumeration" href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a>;</div>
-<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a></div><div class="ttdeci">ange_align_t</div><div class="ttdoc">Text alignment options for printing.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00151">ange.h:151</a></div></div>
-<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9">ANGE_ALIGN_LEFT</a></div><div class="ttdeci">@ ANGE_ALIGN_LEFT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00152">ange.h:152</a></div></div>
-<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1">ANGE_ALIGN_RIGHT</a></div><div class="ttdeci">@ ANGE_ALIGN_RIGHT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00154">ange.h:154</a></div></div>
-<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b">ANGE_ALIGN_CENTER</a></div><div class="ttdeci">@ ANGE_ALIGN_CENTER</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00153">ange.h:153</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00196">196</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  196</span>             {</div>
+<div class="line"><span class="lineno">  197</span>    <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9">ANGE_ALIGN_LEFT</a>,    </div>
+<div class="line"><span class="lineno">  198</span>    <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b">ANGE_ALIGN_CENTER</a>,  </div>
+<div class="line"><span class="lineno">  199</span>    <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1">ANGE_ALIGN_RIGHT</a>    </div>
+<div class="line"><span class="lineno">  200</span>} <a class="code hl_enumeration" href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a>;</div>
+<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a></div><div class="ttdeci">ange_align_t</div><div class="ttdoc">Text alignment options for printing.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00196">ange.h:196</a></div></div>
+<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9">ANGE_ALIGN_LEFT</a></div><div class="ttdeci">@ ANGE_ALIGN_LEFT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00197">ange.h:197</a></div></div>
+<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1">ANGE_ALIGN_RIGHT</a></div><div class="ttdeci">@ ANGE_ALIGN_RIGHT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00199">ange.h:199</a></div></div>
+<div class="ttc" id="aange_8h_html_af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b"><div class="ttname"><a href="#af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b">ANGE_ALIGN_CENTER</a></div><div class="ttdeci">@ ANGE_ALIGN_CENTER</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00198">ange.h:198</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -275,6 +278,8 @@ Variables</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9" name="a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9"></a>ANGE_KEY_ENTER&#160;</td><td class="fielddoc"><p>Enter key </p>
 </td></tr>
+<tr><td class="fieldname"><a id="a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a" name="a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a"></a>ANGE_KEY_BACKSPACE&#160;</td><td class="fielddoc"><p>Backspace key </p>
+</td></tr>
 <tr><td class="fieldname"><a id="a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555" name="a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555"></a>ANGE_KEY_ARROW_UP&#160;</td><td class="fielddoc"><p>Up arrow key </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4" name="a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4"></a>ANGE_KEY_ARROW_DOWN&#160;</td><td class="fielddoc"><p>Down arrow key </p>
@@ -289,38 +294,40 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00042">42</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>             {</div>
-<div class="line"><span class="lineno">   43</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a> = 0,   </div>
-<div class="line"><span class="lineno">   44</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>,         </div>
-<div class="line"><span class="lineno">   45</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>,      </div>
-<div class="line"><span class="lineno">   46</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>,    </div>
-<div class="line"><span class="lineno">   47</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>,    </div>
-<div class="line"><span class="lineno">   48</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>,   </div>
-<div class="line"><span class="lineno">   49</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>,        </div>
-<div class="line"><span class="lineno">   50</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>           </div>
-<div class="line"><span class="lineno">   51</span>} <a class="code hl_enumeration" href="#a2fb03dab3b13f314a48f48c2107a1961">ange_key_t</a>;</div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961">ange_key_t</a></div><div class="ttdeci">ange_key_t</div><div class="ttdoc">Enum representing supported key input types.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00042">ange.h:42</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a></div><div class="ttdeci">@ ANGE_KEY_UNKNOWN</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00043">ange.h:43</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_DOWN</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00046">ange.h:46</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a></div><div class="ttdeci">@ ANGE_KEY_ENTER</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00044">ange.h:44</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_LEFT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00047">ange.h:47</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_UP</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00045">ange.h:45</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a></div><div class="ttdeci">@ ANGE_KEY_CHAR</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00050">ange.h:50</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a></div><div class="ttdeci">@ ANGE_KEY_ESCAPE</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00049">ange.h:49</a></div></div>
-<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_RIGHT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00048">ange.h:48</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00049">49</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>             {</div>
+<div class="line"><span class="lineno">   50</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a> = 0,   </div>
+<div class="line"><span class="lineno">   51</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>,         </div>
+<div class="line"><span class="lineno">   52</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a">ANGE_KEY_BACKSPACE</a>,     </div>
+<div class="line"><span class="lineno">   53</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>,      </div>
+<div class="line"><span class="lineno">   54</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>,    </div>
+<div class="line"><span class="lineno">   55</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>,    </div>
+<div class="line"><span class="lineno">   56</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>,   </div>
+<div class="line"><span class="lineno">   57</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>,        </div>
+<div class="line"><span class="lineno">   58</span>    <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>           </div>
+<div class="line"><span class="lineno">   59</span>} <a class="code hl_enumeration" href="#a2fb03dab3b13f314a48f48c2107a1961">ange_key_t</a>;</div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961">ange_key_t</a></div><div class="ttdeci">ange_key_t</div><div class="ttdoc">Enum representing supported key input types.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00049">ange.h:49</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a">ANGE_KEY_BACKSPACE</a></div><div class="ttdeci">@ ANGE_KEY_BACKSPACE</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00052">ange.h:52</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a></div><div class="ttdeci">@ ANGE_KEY_UNKNOWN</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00050">ange.h:50</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_DOWN</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00054">ange.h:54</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a></div><div class="ttdeci">@ ANGE_KEY_ENTER</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00051">ange.h:51</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_LEFT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00055">ange.h:55</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_UP</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00053">ange.h:53</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a></div><div class="ttdeci">@ ANGE_KEY_CHAR</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00058">ange.h:58</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a></div><div class="ttdeci">@ ANGE_KEY_ESCAPE</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00057">ange.h:57</a></div></div>
+<div class="ttc" id="aange_8h_html_a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711"><div class="ttname"><a href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a></div><div class="ttdeci">@ ANGE_KEY_ARROW_RIGHT</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00056">ange.h:56</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="aada6f72e0a98797f48ca131da809d95b" name="aada6f72e0a98797f48ca131da809d95b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aada6f72e0a98797f48ca131da809d95b">&#9670;&#160;</a></span>angeClearScreen()</h2>
+<a id="ae1e848df713b22ccf96ed9e2933fdcdc" name="ae1e848df713b22ccf96ed9e2933fdcdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1e848df713b22ccf96ed9e2933fdcdc">&#9670;&#160;</a></span>angeClear()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void angeClearScreen </td>
+          <td class="memname">void angeClear </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -330,10 +337,10 @@ Variables</h2></td></tr>
 
 <p>Clears the screen. </p>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00204">204</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  204</span>                       {</div>
-<div class="line"><span class="lineno">  205</span>    printf(<span class="stringliteral">&quot;\033[2J\033[H&quot;</span>);</div>
-<div class="line"><span class="lineno">  206</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00241">241</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  241</span>                 {</div>
+<div class="line"><span class="lineno">  242</span>    printf(<span class="stringliteral">&quot;\033[2J\033[H&quot;</span>);</div>
+<div class="line"><span class="lineno">  243</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -392,27 +399,27 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00439">439</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  439</span>                                                                                {</div>
-<div class="line"><span class="lineno">  440</span>    printf(<span class="stringliteral">&quot;\033[%d;%dH┌&quot;</span>, y, x);</div>
-<div class="line"><span class="lineno">  441</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; width - 2; i++) printf(<span class="stringliteral">&quot;─&quot;</span>);</div>
-<div class="line"><span class="lineno">  442</span>    printf(<span class="stringliteral">&quot;┐&quot;</span>);</div>
-<div class="line"><span class="lineno">  443</span> </div>
-<div class="line"><span class="lineno">  444</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; height - 1; i++) {</div>
-<div class="line"><span class="lineno">  445</span>        printf(<span class="stringliteral">&quot;\033[%d;%dH│&quot;</span>, y + i, x);</div>
-<div class="line"><span class="lineno">  446</span>        printf(<span class="stringliteral">&quot;\033[%d;%dH│&quot;</span>, y + i, x + width - 1);</div>
-<div class="line"><span class="lineno">  447</span>    }</div>
-<div class="line"><span class="lineno">  448</span> </div>
-<div class="line"><span class="lineno">  449</span>    printf(<span class="stringliteral">&quot;\033[%d;%dH└&quot;</span>, y + height - 1, x);</div>
-<div class="line"><span class="lineno">  450</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; width - 2; i++) printf(<span class="stringliteral">&quot;─&quot;</span>);</div>
-<div class="line"><span class="lineno">  451</span>    printf(<span class="stringliteral">&quot;┘&quot;</span>);</div>
-<div class="line"><span class="lineno">  452</span> </div>
-<div class="line"><span class="lineno">  453</span>    <span class="keywordflow">if</span> (title) {</div>
-<div class="line"><span class="lineno">  454</span>        printf(<span class="stringliteral">&quot;\033[%d;%dH[%s]&quot;</span>, y, x + 2, title);</div>
-<div class="line"><span class="lineno">  455</span>    }</div>
-<div class="line"><span class="lineno">  456</span> </div>
-<div class="line"><span class="lineno">  457</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  458</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00458">458</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  458</span>                                                                                {</div>
+<div class="line"><span class="lineno">  459</span>    printf(<span class="stringliteral">&quot;\033[%d;%dH┌&quot;</span>, y, x);</div>
+<div class="line"><span class="lineno">  460</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; width - 2; i++) printf(<span class="stringliteral">&quot;─&quot;</span>);</div>
+<div class="line"><span class="lineno">  461</span>    printf(<span class="stringliteral">&quot;┐&quot;</span>);</div>
+<div class="line"><span class="lineno">  462</span> </div>
+<div class="line"><span class="lineno">  463</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; height - 1; i++) {</div>
+<div class="line"><span class="lineno">  464</span>        printf(<span class="stringliteral">&quot;\033[%d;%dH│&quot;</span>, y + i, x);</div>
+<div class="line"><span class="lineno">  465</span>        printf(<span class="stringliteral">&quot;\033[%d;%dH│&quot;</span>, y + i, x + width - 1);</div>
+<div class="line"><span class="lineno">  466</span>    }</div>
+<div class="line"><span class="lineno">  467</span> </div>
+<div class="line"><span class="lineno">  468</span>    printf(<span class="stringliteral">&quot;\033[%d;%dH└&quot;</span>, y + height - 1, x);</div>
+<div class="line"><span class="lineno">  469</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; width - 2; i++) printf(<span class="stringliteral">&quot;─&quot;</span>);</div>
+<div class="line"><span class="lineno">  470</span>    printf(<span class="stringliteral">&quot;┘&quot;</span>);</div>
+<div class="line"><span class="lineno">  471</span> </div>
+<div class="line"><span class="lineno">  472</span>    <span class="keywordflow">if</span> (title) {</div>
+<div class="line"><span class="lineno">  473</span>        printf(<span class="stringliteral">&quot;\033[%d;%dH[%s]&quot;</span>, y, x + 2, title);</div>
+<div class="line"><span class="lineno">  474</span>    }</div>
+<div class="line"><span class="lineno">  475</span> </div>
+<div class="line"><span class="lineno">  476</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  477</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -458,19 +465,19 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00301">301</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  301</span>                                                                                  {</div>
-<div class="line"><span class="lineno">  302</span>    printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
-<div class="line"><span class="lineno">  303</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
-<div class="line"><span class="lineno">  304</span>        <span class="keywordflow">if</span> (i == selected_index)</div>
-<div class="line"><span class="lineno">  305</span>            printf(<span class="stringliteral">&quot;➤ [%s]\n&quot;</span>, buttons[i].label);</div>
-<div class="line"><span class="lineno">  306</span>        <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  307</span>            printf(<span class="stringliteral">&quot;  [%s]\n&quot;</span>, buttons[i].label);</div>
-<div class="line"><span class="lineno">  308</span>    }</div>
-<div class="line"><span class="lineno">  309</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  310</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00331">331</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  331</span>                                                                                  {</div>
+<div class="line"><span class="lineno">  332</span>    printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
+<div class="line"><span class="lineno">  333</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
+<div class="line"><span class="lineno">  334</span>        <span class="keywordflow">if</span> (i == selected_index)</div>
+<div class="line"><span class="lineno">  335</span>            printf(<span class="stringliteral">&quot;[ %s ]\n&quot;</span>, buttons[i].label);</div>
+<div class="line"><span class="lineno">  336</span>        <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  337</span>            printf(<span class="stringliteral">&quot;[ %s ]\n&quot;</span>, buttons[i].label);</div>
+<div class="line"><span class="lineno">  338</span>    }</div>
+<div class="line"><span class="lineno">  339</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  340</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00270">angeInputButton()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00352">angeInputButton()</a>.</p>
 
 </div>
 </div>
@@ -518,42 +525,42 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Index of the selected navigation item. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00471">471</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  471</span>                                                                                {</div>
-<div class="line"><span class="lineno">  472</span>    <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><span class="lineno">  473</span>        printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
-<div class="line"><span class="lineno">  474</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
-<div class="line"><span class="lineno">  475</span>            <span class="keywordflow">if</span> (i == selected_index)</div>
-<div class="line"><span class="lineno">  476</span>                printf(<span class="stringliteral">&quot;[\033[7m%s\033[0m] &quot;</span>, items[i].label);</div>
-<div class="line"><span class="lineno">  477</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  478</span>                printf(<span class="stringliteral">&quot;[%s] &quot;</span>, items[i].label);</div>
-<div class="line"><span class="lineno">  479</span>        }</div>
-<div class="line"><span class="lineno">  480</span>        printf(<span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><span class="lineno">  481</span>        fflush(stdout);</div>
-<div class="line"><span class="lineno">  482</span> </div>
-<div class="line"><span class="lineno">  483</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
-<div class="line"><span class="lineno">  484</span> </div>
-<div class="line"><span class="lineno">  485</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>) {</div>
-<div class="line"><span class="lineno">  486</span>            selected_index = (selected_index - 1 + count) % count;</div>
-<div class="line"><span class="lineno">  487</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>) {</div>
-<div class="line"><span class="lineno">  488</span>            selected_index = (selected_index + 1) % count;</div>
-<div class="line"><span class="lineno">  489</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>) {</div>
-<div class="line"><span class="lineno">  490</span>            <span class="keywordflow">return</span> selected_index;</div>
-<div class="line"><span class="lineno">  491</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>) {</div>
-<div class="line"><span class="lineno">  492</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
-<div class="line"><span class="lineno">  493</span>                <span class="keywordflow">if</span> (items[i].hotkey == input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> || items[i].hotkey == input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> + 32) {</div>
-<div class="line"><span class="lineno">  494</span>                    <span class="keywordflow">return</span> i;</div>
-<div class="line"><span class="lineno">  495</span>                }</div>
-<div class="line"><span class="lineno">  496</span>            }</div>
-<div class="line"><span class="lineno">  497</span>        }</div>
-<div class="line"><span class="lineno">  498</span>    }</div>
-<div class="line"><span class="lineno">  499</span>}</div>
-<div class="ttc" id="aange_8h_html_a7c141267ebc187b9a82c2eac9624744d"><div class="ttname"><a href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a></div><div class="ttdeci">static ange_input_t angeReadKey(void)</div><div class="ttdoc">Reads a key press from standard input and returns it as an ange_input_t structure.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00069">ange.h:69</a></div></div>
-<div class="ttc" id="astructange__input__t_html"><div class="ttname"><a href="structange__input__t.html">ange_input_t</a></div><div class="ttdoc">Represents a keyboard input event.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00057">ange.h:57</a></div></div>
-<div class="ttc" id="astructange__input__t_html_a1e561e6509514d14e8ba2bfe8278f871"><div class="ttname"><a href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">ange_input_t::type</a></div><div class="ttdeci">tui_key_t type</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00058">ange.h:58</a></div></div>
-<div class="ttc" id="astructange__input__t_html_ad689679e39580dd6ece0874af1be6608"><div class="ttname"><a href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ange_input_t::ch</a></div><div class="ttdeci">char ch</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00059">ange.h:59</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00490">490</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  490</span>                                                                                {</div>
+<div class="line"><span class="lineno">  491</span>    <span class="keywordflow">while</span> (1) {</div>
+<div class="line"><span class="lineno">  492</span>        printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
+<div class="line"><span class="lineno">  493</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
+<div class="line"><span class="lineno">  494</span>            <span class="keywordflow">if</span> (i == selected_index)</div>
+<div class="line"><span class="lineno">  495</span>                printf(<span class="stringliteral">&quot;[\033[7m%s\033[0m] &quot;</span>, items[i].label);</div>
+<div class="line"><span class="lineno">  496</span>            <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  497</span>                printf(<span class="stringliteral">&quot;[%s] &quot;</span>, items[i].label);</div>
+<div class="line"><span class="lineno">  498</span>        }</div>
+<div class="line"><span class="lineno">  499</span>        printf(<span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><span class="lineno">  500</span>        fflush(stdout);</div>
+<div class="line"><span class="lineno">  501</span> </div>
+<div class="line"><span class="lineno">  502</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
+<div class="line"><span class="lineno">  503</span> </div>
+<div class="line"><span class="lineno">  504</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>) {</div>
+<div class="line"><span class="lineno">  505</span>            selected_index = (selected_index - 1 + count) % count;</div>
+<div class="line"><span class="lineno">  506</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>) {</div>
+<div class="line"><span class="lineno">  507</span>            selected_index = (selected_index + 1) % count;</div>
+<div class="line"><span class="lineno">  508</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>) {</div>
+<div class="line"><span class="lineno">  509</span>            <span class="keywordflow">return</span> selected_index;</div>
+<div class="line"><span class="lineno">  510</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>) {</div>
+<div class="line"><span class="lineno">  511</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
+<div class="line"><span class="lineno">  512</span>                <span class="keywordflow">if</span> (items[i].hotkey == input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> || items[i].hotkey == input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> + 32) {</div>
+<div class="line"><span class="lineno">  513</span>                    <span class="keywordflow">return</span> i;</div>
+<div class="line"><span class="lineno">  514</span>                }</div>
+<div class="line"><span class="lineno">  515</span>            }</div>
+<div class="line"><span class="lineno">  516</span>        }</div>
+<div class="line"><span class="lineno">  517</span>    }</div>
+<div class="line"><span class="lineno">  518</span>}</div>
+<div class="ttc" id="aange_8h_html_a7c141267ebc187b9a82c2eac9624744d"><div class="ttname"><a href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a></div><div class="ttdeci">static ange_input_t angeReadKey(void)</div><div class="ttdoc">Reads a key press from standard input and returns it as an ange_input_t structure.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00077">ange.h:77</a></div></div>
+<div class="ttc" id="astructange__input__t_html"><div class="ttname"><a href="structange__input__t.html">ange_input_t</a></div><div class="ttdoc">Represents a keyboard input event.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00065">ange.h:65</a></div></div>
+<div class="ttc" id="astructange__input__t_html_ad689679e39580dd6ece0874af1be6608"><div class="ttname"><a href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ange_input_t::ch</a></div><div class="ttdeci">char ch</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00067">ange.h:67</a></div></div>
+<div class="ttc" id="astructange__input__t_html_af92a68cffe90402a36cc845445cc1c1c"><div class="ttname"><a href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">ange_input_t::type</a></div><div class="ttdeci">ange_key_t type</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00066">ange.h:66</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00047">ANGE_KEY_ARROW_LEFT</a>, <a class="el" href="ange_8h_source.html#l00048">ANGE_KEY_ARROW_RIGHT</a>, <a class="el" href="ange_8h_source.html#l00050">ANGE_KEY_CHAR</a>, <a class="el" href="ange_8h_source.html#l00044">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00069">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00059">ange_input_t::ch</a>, <a class="el" href="ange_8h_source.html#l00196">ange_navitem_t::hotkey</a>, and <a class="el" href="ange_8h_source.html#l00058">ange_input_t::type</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00055">ANGE_KEY_ARROW_LEFT</a>, <a class="el" href="ange_8h_source.html#l00056">ANGE_KEY_ARROW_RIGHT</a>, <a class="el" href="ange_8h_source.html#l00058">ANGE_KEY_CHAR</a>, <a class="el" href="ange_8h_source.html#l00051">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00077">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00067">ange_input_t::ch</a>, <a class="el" href="ange_8h_source.html#l00233">ange_navitem_t::hotkey</a>, and <a class="el" href="ange_8h_source.html#l00066">ange_input_t::type</a>.</p>
 
 </div>
 </div>
@@ -594,30 +601,29 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00405">405</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  405</span>                                                       {</div>
-<div class="line"><span class="lineno">  406</span>    <span class="keywordtype">int</span> len = 0;</div>
-<div class="line"><span class="lineno">  407</span>    buffer[0] = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><span class="lineno">  408</span> </div>
-<div class="line"><span class="lineno">  409</span>    <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><span class="lineno">  410</span>        printf(<span class="stringliteral">&quot;\033[H&gt; %s&quot;</span>, buffer);</div>
-<div class="line"><span class="lineno">  411</span>        fflush(stdout);</div>
-<div class="line"><span class="lineno">  412</span> </div>
-<div class="line"><span class="lineno">  413</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
-<div class="line"><span class="lineno">  414</span> </div>
-<div class="line"><span class="lineno">  415</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>) {</div>
-<div class="line"><span class="lineno">  416</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  417</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a> &amp;&amp; len &lt; max_len - 1) {</div>
-<div class="line"><span class="lineno">  418</span>            buffer[len++] = input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a>;</div>
-<div class="line"><span class="lineno">  419</span>            buffer[len] = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><span class="lineno">  420</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a> &amp;&amp; input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> == 127 &amp;&amp; len &gt; 0) {</div>
-<div class="line"><span class="lineno">  421</span>            len--;</div>
-<div class="line"><span class="lineno">  422</span>            buffer[len] = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><span class="lineno">  423</span>        }</div>
-<div class="line"><span class="lineno">  424</span>    }</div>
-<div class="line"><span class="lineno">  425</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00425">425</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  425</span>                                                       {</div>
+<div class="line"><span class="lineno">  426</span>    <span class="keywordtype">int</span> len = 0;</div>
+<div class="line"><span class="lineno">  427</span>    buffer[0] = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><span class="lineno">  428</span> </div>
+<div class="line"><span class="lineno">  429</span>    <span class="keywordflow">while</span> (1) {</div>
+<div class="line"><span class="lineno">  430</span>        printf(<span class="stringliteral">&quot;\033[H&gt; %s &quot;</span>, buffer);</div>
+<div class="line"><span class="lineno">  431</span>        fflush(stdout);</div>
+<div class="line"><span class="lineno">  432</span> </div>
+<div class="line"><span class="lineno">  433</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
+<div class="line"><span class="lineno">  434</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a">ANGE_KEY_BACKSPACE</a> &amp;&amp; len &gt; 0) {</div>
+<div class="line"><span class="lineno">  435</span>            len--;</div>
+<div class="line"><span class="lineno">  436</span>            buffer[len] = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><span class="lineno">  437</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a> &amp;&amp; len &lt; max_len - 1) {</div>
+<div class="line"><span class="lineno">  438</span>            buffer[len++] = input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a>;</div>
+<div class="line"><span class="lineno">  439</span>            buffer[len] = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><span class="lineno">  440</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> == <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>) {</div>
+<div class="line"><span class="lineno">  441</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  442</span>        }</div>
+<div class="line"><span class="lineno">  443</span>    }</div>
+<div class="line"><span class="lineno">  444</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00050">ANGE_KEY_CHAR</a>, <a class="el" href="ange_8h_source.html#l00044">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00069">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00059">ange_input_t::ch</a>, and <a class="el" href="ange_8h_source.html#l00058">ange_input_t::type</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00052">ANGE_KEY_BACKSPACE</a>, <a class="el" href="ange_8h_source.html#l00058">ANGE_KEY_CHAR</a>, <a class="el" href="ange_8h_source.html#l00051">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00077">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00067">ange_input_t::ch</a>, and <a class="el" href="ange_8h_source.html#l00066">ange_input_t::type</a>.</p>
 
 </div>
 </div>
@@ -647,31 +653,31 @@ Variables</h2></td></tr>
 <p>Initializes the TUI by setting the terminal to raw mode and clearing the screen. </p>
 <p>Disables canonical mode and echo, hides the cursor, and clears the terminal. Safe to call multiple times; only initializes once. </p>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00110">110</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  110</span>                           {</div>
-<div class="line"><span class="lineno">  111</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  112</span> </div>
-<div class="line"><span class="lineno">  113</span>    tcgetattr(STDIN_FILENO, &amp;<a class="code hl_variable" href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a>);</div>
-<div class="line"><span class="lineno">  114</span> </div>
-<div class="line"><span class="lineno">  115</span>    <span class="keyword">struct </span>termios raw = <a class="code hl_variable" href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a>;</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>    raw.c_lflag &amp;= ~(ECHO | ICANON);</div>
-<div class="line"><span class="lineno">  118</span>    raw.c_cc[VMIN] = 1;</div>
-<div class="line"><span class="lineno">  119</span>    raw.c_cc[VTIME] = 0;</div>
-<div class="line"><span class="lineno">  120</span> </div>
-<div class="line"><span class="lineno">  121</span>    tcsetattr(STDIN_FILENO, TCSANOW, &amp;raw);</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>    printf(<span class="stringliteral">&quot;\033[?25l\033[2J\033[H&quot;</span>);</div>
-<div class="line"><span class="lineno">  124</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>    <a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a> = 1;</div>
-<div class="line"><span class="lineno">  127</span>}</div>
-<div class="ttc" id="aange_8h_html_a69109e9ae41ef8797b39d956726271cf"><div class="ttname"><a href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a></div><div class="ttdeci">static int ange_initialized</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00035">ange.h:35</a></div></div>
-<div class="ttc" id="aange_8h_html_a691a57e8ed4016cc92dfa3fedd7ad330"><div class="ttname"><a href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a></div><div class="ttdeci">static struct termios tui_orig_termios</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00034">ange.h:34</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00155">155</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  155</span>                           {</div>
+<div class="line"><span class="lineno">  156</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  157</span> </div>
+<div class="line"><span class="lineno">  158</span>    tcgetattr(STDIN_FILENO, &amp;<a class="code hl_variable" href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a>);</div>
+<div class="line"><span class="lineno">  159</span> </div>
+<div class="line"><span class="lineno">  160</span>    <span class="keyword">struct </span>termios raw = <a class="code hl_variable" href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a>;</div>
+<div class="line"><span class="lineno">  161</span> </div>
+<div class="line"><span class="lineno">  162</span>    raw.c_lflag &amp;= ~(ECHO | ICANON);</div>
+<div class="line"><span class="lineno">  163</span>    raw.c_cc[VMIN] = 1;</div>
+<div class="line"><span class="lineno">  164</span>    raw.c_cc[VTIME] = 0;</div>
+<div class="line"><span class="lineno">  165</span> </div>
+<div class="line"><span class="lineno">  166</span>    tcsetattr(STDIN_FILENO, TCSANOW, &amp;raw);</div>
+<div class="line"><span class="lineno">  167</span> </div>
+<div class="line"><span class="lineno">  168</span>    printf(<span class="stringliteral">&quot;\033[?25l\033[2J\033[H&quot;</span>);</div>
+<div class="line"><span class="lineno">  169</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>    <a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a> = 1;</div>
+<div class="line"><span class="lineno">  172</span>}</div>
+<div class="ttc" id="aange_8h_html_a69109e9ae41ef8797b39d956726271cf"><div class="ttname"><a href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a></div><div class="ttdeci">static int ange_initialized</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00042">ange.h:42</a></div></div>
+<div class="ttc" id="aange_8h_html_a691a57e8ed4016cc92dfa3fedd7ad330"><div class="ttname"><a href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a></div><div class="ttdeci">static struct termios tui_orig_termios</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00041">ange.h:41</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00035">ange_initialized</a>, and <a class="el" href="ange_8h_source.html#l00034">tui_orig_termios</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00042">ange_initialized</a>, and <a class="el" href="ange_8h_source.html#l00041">tui_orig_termios</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00240">angePrintP_Unaligned()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00255">angePrintP()</a>, and <a class="el" href="ange_8h_source.html#l00280">angePrintP_Unaligned()</a>.</p>
 
 </div>
 </div>
@@ -713,107 +719,31 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Index of the selected button. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00270">270</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  270</span>                                                              {</div>
-<div class="line"><span class="lineno">  271</span>    <span class="keywordtype">int</span> current = 0;</div>
-<div class="line"><span class="lineno">  272</span> </div>
-<div class="line"><span class="lineno">  273</span>    <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><span class="lineno">  274</span>        <a class="code hl_function" href="#a05667f7f6f6bb8f57a7a53376825755e">angeDrawButton</a>(buttons, count, current);</div>
-<div class="line"><span class="lineno">  275</span> </div>
-<div class="line"><span class="lineno">  276</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
-<div class="line"><span class="lineno">  277</span>        <span class="keywordflow">switch</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a>) {</div>
-<div class="line"><span class="lineno">  278</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>:</div>
-<div class="line"><span class="lineno">  279</span>                current = (current - 1 + count) % count;</div>
-<div class="line"><span class="lineno">  280</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  281</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>:</div>
-<div class="line"><span class="lineno">  282</span>                current = (current + 1) % count;</div>
-<div class="line"><span class="lineno">  283</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  284</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>:</div>
-<div class="line"><span class="lineno">  285</span>                <span class="keywordflow">return</span> current;</div>
-<div class="line"><span class="lineno">  286</span>            <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  287</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  288</span>        }</div>
-<div class="line"><span class="lineno">  289</span>    }</div>
-<div class="line"><span class="lineno">  290</span>}</div>
-<div class="ttc" id="aange_8h_html_a05667f7f6f6bb8f57a7a53376825755e"><div class="ttname"><a href="#a05667f7f6f6bb8f57a7a53376825755e">angeDrawButton</a></div><div class="ttdeci">static void angeDrawButton(ange_button_t *buttons, int count, int selected_index)</div><div class="ttdoc">Draws buttons with one selected but does not handle user input.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00301">ange.h:301</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00352">352</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  352</span>                                                              {</div>
+<div class="line"><span class="lineno">  353</span>    <span class="keywordtype">int</span> current = 0;</div>
+<div class="line"><span class="lineno">  354</span> </div>
+<div class="line"><span class="lineno">  355</span>    <span class="keywordflow">while</span> (1) {</div>
+<div class="line"><span class="lineno">  356</span>        <a class="code hl_function" href="#a05667f7f6f6bb8f57a7a53376825755e">angeDrawButton</a>(buttons, count, current);</div>
+<div class="line"><span class="lineno">  357</span> </div>
+<div class="line"><span class="lineno">  358</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
+<div class="line"><span class="lineno">  359</span>        <span class="keywordflow">switch</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a>) {</div>
+<div class="line"><span class="lineno">  360</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>:</div>
+<div class="line"><span class="lineno">  361</span>                current = (current - 1 + count) % count;</div>
+<div class="line"><span class="lineno">  362</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  363</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>:</div>
+<div class="line"><span class="lineno">  364</span>                current = (current + 1) % count;</div>
+<div class="line"><span class="lineno">  365</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  366</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>:</div>
+<div class="line"><span class="lineno">  367</span>                <span class="keywordflow">return</span> current;</div>
+<div class="line"><span class="lineno">  368</span>            <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  369</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  370</span>        }</div>
+<div class="line"><span class="lineno">  371</span>    }</div>
+<div class="line"><span class="lineno">  372</span>}</div>
+<div class="ttc" id="aange_8h_html_a05667f7f6f6bb8f57a7a53376825755e"><div class="ttname"><a href="#a05667f7f6f6bb8f57a7a53376825755e">angeDrawButton</a></div><div class="ttdeci">static void angeDrawButton(ange_button_t *buttons, int count, int selected_index)</div><div class="ttdoc">Draws buttons with one selected but does not handle user input.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00331">ange.h:331</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00046">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00045">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00044">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00301">angeDrawButton()</a>, <a class="el" href="ange_8h_source.html#l00069">angeReadKey()</a>, and <a class="el" href="ange_8h_source.html#l00058">ange_input_t::type</a>.</p>
-
-</div>
-</div>
-<a id="aa1fd65076825d41074ce0fd60754440d" name="aa1fd65076825d41074ce0fd60754440d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1fd65076825d41074ce0fd60754440d">&#9670;&#160;</a></span>angeInputCheckboxes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void angeInputCheckboxes </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structange__checkbox__t.html">ange_checkbox_t</a> *</td>          <td class="paramname"><span class="paramname"><em>boxes</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>count</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Displays a list of checkboxes and lets the user toggle them. </p>
-<p>Supports navigation with arrow keys, toggling with Enter, and exiting with Escape.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">boxes</td><td>Array of <a class="el" href="structange__checkbox__t.html" title="Represents a checkbox element.">ange_checkbox_t</a> checkboxes. </td></tr>
-    <tr><td class="paramname">count</td><td>Number of checkboxes. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00321">321</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  321</span>                                                                   {</div>
-<div class="line"><span class="lineno">  322</span>    <span class="keywordtype">int</span> current = 0;</div>
-<div class="line"><span class="lineno">  323</span> </div>
-<div class="line"><span class="lineno">  324</span>    <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><span class="lineno">  325</span>        printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
-<div class="line"><span class="lineno">  326</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
-<div class="line"><span class="lineno">  327</span>            <span class="keyword">const</span> <span class="keywordtype">char</span>* marker = boxes[i].<a class="code hl_variable" href="structange__checkbox__t.html#a62f29e0333e290198b9d1a33e3b1d5d5">checked</a> ? <span class="stringliteral">&quot;[x]&quot;</span> : <span class="stringliteral">&quot;[ ]&quot;</span>;</div>
-<div class="line"><span class="lineno">  328</span>            <span class="keywordflow">if</span> (i == current)</div>
-<div class="line"><span class="lineno">  329</span>                printf(<span class="stringliteral">&quot;➤ %s %s\n&quot;</span>, marker, boxes[i].label);</div>
-<div class="line"><span class="lineno">  330</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  331</span>                printf(<span class="stringliteral">&quot;  %s %s\n&quot;</span>, marker, boxes[i].label);</div>
-<div class="line"><span class="lineno">  332</span>        }</div>
-<div class="line"><span class="lineno">  333</span>        fflush(stdout);</div>
-<div class="line"><span class="lineno">  334</span> </div>
-<div class="line"><span class="lineno">  335</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
-<div class="line"><span class="lineno">  336</span>        <span class="keywordflow">switch</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a>) {</div>
-<div class="line"><span class="lineno">  337</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>:</div>
-<div class="line"><span class="lineno">  338</span>                current = (current - 1 + count) % count;</div>
-<div class="line"><span class="lineno">  339</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  340</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>:</div>
-<div class="line"><span class="lineno">  341</span>                current = (current + 1) % count;</div>
-<div class="line"><span class="lineno">  342</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  343</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>:</div>
-<div class="line"><span class="lineno">  344</span>                boxes[current].<a class="code hl_variable" href="structange__checkbox__t.html#a62f29e0333e290198b9d1a33e3b1d5d5">checked</a> = !boxes[current].<a class="code hl_variable" href="structange__checkbox__t.html#a62f29e0333e290198b9d1a33e3b1d5d5">checked</a>;</div>
-<div class="line"><span class="lineno">  345</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  346</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>:</div>
-<div class="line"><span class="lineno">  347</span>                <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  348</span>            <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  349</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  350</span>        }</div>
-<div class="line"><span class="lineno">  351</span>    }</div>
-<div class="line"><span class="lineno">  352</span>}</div>
-<div class="ttc" id="astructange__checkbox__t_html_a62f29e0333e290198b9d1a33e3b1d5d5"><div class="ttname"><a href="structange__checkbox__t.html#a62f29e0333e290198b9d1a33e3b1d5d5">ange_checkbox_t::checked</a></div><div class="ttdeci">int checked</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00172">ange.h:172</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00046">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00045">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00044">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00049">ANGE_KEY_ESCAPE</a>, <a class="el" href="ange_8h_source.html#l00069">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00172">ange_checkbox_t::checked</a>, and <a class="el" href="ange_8h_source.html#l00058">ange_input_t::type</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00054">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00053">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00051">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00331">angeDrawButton()</a>, <a class="el" href="ange_8h_source.html#l00077">angeReadKey()</a>, and <a class="el" href="ange_8h_source.html#l00066">ange_input_t::type</a>.</p>
 
 </div>
 </div>
@@ -850,45 +780,45 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Index of the selected radio option, or -1 if cancelled. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00363">363</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  363</span>                                                     {</div>
-<div class="line"><span class="lineno">  364</span>    <span class="keywordtype">int</span> current = group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">selected_index</a>;</div>
-<div class="line"><span class="lineno">  365</span> </div>
-<div class="line"><span class="lineno">  366</span>    <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><span class="lineno">  367</span>        printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
-<div class="line"><span class="lineno">  368</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>; i++) {</div>
-<div class="line"><span class="lineno">  369</span>            <span class="keyword">const</span> <span class="keywordtype">char</span>* marker = (i == group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">selected_index</a>) ? <span class="stringliteral">&quot;(o)&quot;</span> : <span class="stringliteral">&quot;( )&quot;</span>;</div>
-<div class="line"><span class="lineno">  370</span>            <span class="keywordflow">if</span> (i == current)</div>
-<div class="line"><span class="lineno">  371</span>                printf(<span class="stringliteral">&quot;➤ %s %s\n&quot;</span>, marker, group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0">options</a>[i].<a class="code hl_variable" href="structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4">label</a>);</div>
-<div class="line"><span class="lineno">  372</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  373</span>                printf(<span class="stringliteral">&quot;  %s %s\n&quot;</span>, marker, group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0">options</a>[i].<a class="code hl_variable" href="structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4">label</a>);</div>
-<div class="line"><span class="lineno">  374</span>        }</div>
-<div class="line"><span class="lineno">  375</span>        fflush(stdout);</div>
-<div class="line"><span class="lineno">  376</span> </div>
-<div class="line"><span class="lineno">  377</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
-<div class="line"><span class="lineno">  378</span>        <span class="keywordflow">switch</span> (input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a>) {</div>
-<div class="line"><span class="lineno">  379</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>:</div>
-<div class="line"><span class="lineno">  380</span>                current = (current - 1 + group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>) % group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>;</div>
-<div class="line"><span class="lineno">  381</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  382</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>:</div>
-<div class="line"><span class="lineno">  383</span>                current = (current + 1) % group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>;</div>
-<div class="line"><span class="lineno">  384</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  385</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>:</div>
-<div class="line"><span class="lineno">  386</span>                group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">selected_index</a> = current;</div>
-<div class="line"><span class="lineno">  387</span>                <span class="keywordflow">return</span> current;</div>
-<div class="line"><span class="lineno">  388</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>:</div>
-<div class="line"><span class="lineno">  389</span>                <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  390</span>            <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  391</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  392</span>        }</div>
-<div class="line"><span class="lineno">  393</span>    }</div>
-<div class="line"><span class="lineno">  394</span>}</div>
-<div class="ttc" id="astructange__radio__group__t_html_a4db28ebd0a0fb8fb065a9b121abc0c6b"><div class="ttname"><a href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">ange_radio_group_t::count</a></div><div class="ttdeci">int count</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00187">ange.h:187</a></div></div>
-<div class="ttc" id="astructange__radio__group__t_html_a616ace6c9cceb2cbd8a393cbddcf6eee"><div class="ttname"><a href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">ange_radio_group_t::selected_index</a></div><div class="ttdeci">int selected_index</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00188">ange.h:188</a></div></div>
-<div class="ttc" id="astructange__radio__group__t_html_ae6fe388a20dbc03a44ece966e05111c0"><div class="ttname"><a href="structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0">ange_radio_group_t::options</a></div><div class="ttdeci">ange_radio_option_t * options</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00186">ange.h:186</a></div></div>
-<div class="ttc" id="astructange__radio__option__t_html_a052445cc24af6d64ef3644d89148aec4"><div class="ttname"><a href="structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4">ange_radio_option_t::label</a></div><div class="ttdeci">const char * label</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00179">ange.h:179</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00383">383</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  383</span>                                                     {</div>
+<div class="line"><span class="lineno">  384</span>    <span class="keywordtype">int</span> current = group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">selected_index</a>;</div>
+<div class="line"><span class="lineno">  385</span> </div>
+<div class="line"><span class="lineno">  386</span>    <span class="keywordflow">while</span> (1) {</div>
+<div class="line"><span class="lineno">  387</span>        printf(<span class="stringliteral">&quot;\033[H&quot;</span>);</div>
+<div class="line"><span class="lineno">  388</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>; i++) {</div>
+<div class="line"><span class="lineno">  389</span>            <span class="keyword">const</span> <span class="keywordtype">char</span>* marker = (i == group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">selected_index</a>) ? <span class="stringliteral">&quot;(o)&quot;</span> : <span class="stringliteral">&quot;( )&quot;</span>;</div>
+<div class="line"><span class="lineno">  390</span>            <span class="keywordflow">if</span> (i == current)</div>
+<div class="line"><span class="lineno">  391</span>                printf(<span class="stringliteral">&quot;➤ %s %s\n&quot;</span>, marker, group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0">options</a>[i].<a class="code hl_variable" href="structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4">label</a>);</div>
+<div class="line"><span class="lineno">  392</span>            <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  393</span>                printf(<span class="stringliteral">&quot;  %s %s\n&quot;</span>, marker, group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0">options</a>[i].<a class="code hl_variable" href="structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4">label</a>);</div>
+<div class="line"><span class="lineno">  394</span>        }</div>
+<div class="line"><span class="lineno">  395</span>        fflush(stdout);</div>
+<div class="line"><span class="lineno">  396</span> </div>
+<div class="line"><span class="lineno">  397</span>        <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = <a class="code hl_function" href="#a7c141267ebc187b9a82c2eac9624744d">angeReadKey</a>();</div>
+<div class="line"><span class="lineno">  398</span>        <span class="keywordflow">switch</span> (input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a>) {</div>
+<div class="line"><span class="lineno">  399</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>:</div>
+<div class="line"><span class="lineno">  400</span>                current = (current - 1 + group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>) % group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>;</div>
+<div class="line"><span class="lineno">  401</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  402</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>:</div>
+<div class="line"><span class="lineno">  403</span>                current = (current + 1) % group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">count</a>;</div>
+<div class="line"><span class="lineno">  404</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  405</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>:</div>
+<div class="line"><span class="lineno">  406</span>                group-&gt;<a class="code hl_variable" href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">selected_index</a> = current;</div>
+<div class="line"><span class="lineno">  407</span>                <span class="keywordflow">return</span> current;</div>
+<div class="line"><span class="lineno">  408</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>:</div>
+<div class="line"><span class="lineno">  409</span>                <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  410</span>            <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  411</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  412</span>        }</div>
+<div class="line"><span class="lineno">  413</span>    }</div>
+<div class="line"><span class="lineno">  414</span>}</div>
+<div class="ttc" id="astructange__radio__group__t_html_a4db28ebd0a0fb8fb065a9b121abc0c6b"><div class="ttname"><a href="structange__radio__group__t.html#a4db28ebd0a0fb8fb065a9b121abc0c6b">ange_radio_group_t::count</a></div><div class="ttdeci">int count</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00224">ange.h:224</a></div></div>
+<div class="ttc" id="astructange__radio__group__t_html_a616ace6c9cceb2cbd8a393cbddcf6eee"><div class="ttname"><a href="structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee">ange_radio_group_t::selected_index</a></div><div class="ttdeci">int selected_index</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00225">ange.h:225</a></div></div>
+<div class="ttc" id="astructange__radio__group__t_html_ae6fe388a20dbc03a44ece966e05111c0"><div class="ttname"><a href="structange__radio__group__t.html#ae6fe388a20dbc03a44ece966e05111c0">ange_radio_group_t::options</a></div><div class="ttdeci">ange_radio_option_t * options</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00223">ange.h:223</a></div></div>
+<div class="ttc" id="astructange__radio__option__t_html_a052445cc24af6d64ef3644d89148aec4"><div class="ttname"><a href="structange__radio__option__t.html#a052445cc24af6d64ef3644d89148aec4">ange_radio_option_t::label</a></div><div class="ttdeci">const char * label</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00216">ange.h:216</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00046">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00045">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00044">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00049">ANGE_KEY_ESCAPE</a>, <a class="el" href="ange_8h_source.html#l00069">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00187">ange_radio_group_t::count</a>, <a class="el" href="ange_8h_source.html#l00179">ange_radio_option_t::label</a>, <a class="el" href="ange_8h_source.html#l00186">ange_radio_group_t::options</a>, <a class="el" href="ange_8h_source.html#l00188">ange_radio_group_t::selected_index</a>, and <a class="el" href="ange_8h_source.html#l00058">ange_input_t::type</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00054">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00053">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00051">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00057">ANGE_KEY_ESCAPE</a>, <a class="el" href="ange_8h_source.html#l00077">angeReadKey()</a>, <a class="el" href="ange_8h_source.html#l00224">ange_radio_group_t::count</a>, <a class="el" href="ange_8h_source.html#l00216">ange_radio_option_t::label</a>, <a class="el" href="ange_8h_source.html#l00223">ange_radio_group_t::options</a>, <a class="el" href="ange_8h_source.html#l00225">ange_radio_group_t::selected_index</a>, and <a class="el" href="ange_8h_source.html#l00066">ange_input_t::type</a>.</p>
 
 </div>
 </div>
@@ -918,19 +848,19 @@ Variables</h2></td></tr>
 <p>Restores the terminal to its original settings and shows the cursor. </p>
 <p>Safe to call multiple times; only deinitializes if previously initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00135">135</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  135</span>                           {</div>
-<div class="line"><span class="lineno">  136</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  137</span> </div>
-<div class="line"><span class="lineno">  138</span>    tcsetattr(STDIN_FILENO, TCSANOW, &amp;<a class="code hl_variable" href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a>);</div>
-<div class="line"><span class="lineno">  139</span> </div>
-<div class="line"><span class="lineno">  140</span>    printf(<span class="stringliteral">&quot;\033[?25h\n&quot;</span>);</div>
-<div class="line"><span class="lineno">  141</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  142</span> </div>
-<div class="line"><span class="lineno">  143</span>    <a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a> = 0;</div>
-<div class="line"><span class="lineno">  144</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00180">180</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  180</span>                           {</div>
+<div class="line"><span class="lineno">  181</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  182</span> </div>
+<div class="line"><span class="lineno">  183</span>    tcsetattr(STDIN_FILENO, TCSANOW, &amp;<a class="code hl_variable" href="#a691a57e8ed4016cc92dfa3fedd7ad330">tui_orig_termios</a>);</div>
+<div class="line"><span class="lineno">  184</span> </div>
+<div class="line"><span class="lineno">  185</span>    printf(<span class="stringliteral">&quot;\033[?25h\n&quot;</span>);</div>
+<div class="line"><span class="lineno">  186</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  187</span> </div>
+<div class="line"><span class="lineno">  188</span>    <a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a> = 0;</div>
+<div class="line"><span class="lineno">  189</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00035">ange_initialized</a>, and <a class="el" href="ange_8h_source.html#l00034">tui_orig_termios</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00042">ange_initialized</a>, and <a class="el" href="ange_8h_source.html#l00041">tui_orig_termios</a>.</p>
 
 </div>
 </div>
@@ -957,8 +887,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Prints a header line with styling. </p>
-<p>The header is printed in bold with surrounding === markers.</p>
+<p>Prints a header line with larger size. </p>
+<p>The header is printed in a larger size.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">text</td><td>The null-terminated string to print as header. </td></tr>
@@ -966,16 +896,23 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00255">255</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  255</span>                                              {</div>
-<div class="line"><span class="lineno">  256</span>    printf(<span class="stringliteral">&quot;\033[H\033[1m=== %s ===\033[0m\n\n&quot;</span>, text);</div>
-<div class="line"><span class="lineno">  257</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  258</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00311">311</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  311</span>                                              {</div>
+<div class="line"><span class="lineno">  312</span>    <span class="keywordtype">int</span> hasFiglet = system(<span class="stringliteral">&quot;figlet -v &gt; /dev/null 2&gt;&amp;1&quot;</span>);</div>
+<div class="line"><span class="lineno">  313</span>    <span class="keywordtype">char</span> command[512];</div>
+<div class="line"><span class="lineno">  314</span>    <span class="keywordflow">if</span> (hasFiglet == 0) {</div>
+<div class="line"><span class="lineno">  315</span>        snprintf(command, <span class="keyword">sizeof</span>(command), <span class="stringliteral">&quot;figlet \&quot;%s\&quot;&quot;</span>, text);</div>
+<div class="line"><span class="lineno">  316</span>        system(command);</div>
+<div class="line"><span class="lineno">  317</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  318</span>        printf(text); <span class="comment">// Fallback to crappy visualizing</span></div>
+<div class="line"><span class="lineno">  319</span>    }</div>
+<div class="line"><span class="lineno">  320</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  321</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a74d567f8b86576d49be7d5a9fd0c6836" name="a74d567f8b86576d49be7d5a9fd0c6836"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74d567f8b86576d49be7d5a9fd0c6836">&#9670;&#160;</a></span>angePrintP()</h2>
+<a id="a134dc9da3bda896f95623cd937fb26b3" name="a134dc9da3bda896f95623cd937fb26b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a134dc9da3bda896f95623cd937fb26b3">&#9670;&#160;</a></span>angePrintP()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -991,12 +928,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a></td>          <td class="paramname"><span class="paramname"><em>align</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>term_width</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#af793fa7cb080059db68c6373fabb4ea6">ange_align_t</a></td>          <td class="paramname"><span class="paramname"><em>align</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1007,32 +939,36 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Prints a paragraph of text aligned within the terminal width. </p>
+<p>Initializes the TUI if not already initialized.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">text</td><td>The null-terminated string to print. </td></tr>
     <tr><td class="paramname">align</td><td>The alignment mode (left, center, right). </td></tr>
-    <tr><td class="paramname">term_width</td><td>The width of the terminal in characters. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00217">217</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  217</span>                                                                             {</div>
-<div class="line"><span class="lineno">  218</span>    <span class="keywordtype">int</span> len = strlen(text);</div>
-<div class="line"><span class="lineno">  219</span>    <span class="keywordtype">int</span> pad = 0;</div>
-<div class="line"><span class="lineno">  220</span> </div>
-<div class="line"><span class="lineno">  221</span>    <span class="keywordflow">switch</span> (align) {</div>
-<div class="line"><span class="lineno">  222</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b">ANGE_ALIGN_CENTER</a>: pad = (term_width - len) / 2; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  223</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1">ANGE_ALIGN_RIGHT</a>: pad = term_width - len; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  224</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9">ANGE_ALIGN_LEFT</a>: <span class="keywordflow">default</span>: pad = 0;</div>
-<div class="line"><span class="lineno">  225</span>    }</div>
-<div class="line"><span class="lineno">  226</span> </div>
-<div class="line"><span class="lineno">  227</span>    <span class="keywordflow">if</span> (pad &lt; 0) pad = 0;</div>
-<div class="line"><span class="lineno">  228</span>    printf(<span class="stringliteral">&quot;\033[H%*s%s\n&quot;</span>, pad, <span class="stringliteral">&quot;&quot;</span>, text);</div>
-<div class="line"><span class="lineno">  229</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  230</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00255">255</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  255</span>                                                             {</div>
+<div class="line"><span class="lineno">  256</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <a class="code hl_function" href="#ad8295217944f5e6b80379cd2d4f3645a">angeInit</a>();</div>
+<div class="line"><span class="lineno">  257</span> </div>
+<div class="line"><span class="lineno">  258</span>    <span class="keywordtype">int</span> len = strlen(text);</div>
+<div class="line"><span class="lineno">  259</span>    <span class="keywordtype">int</span> pad = 0;</div>
+<div class="line"><span class="lineno">  260</span> </div>
+<div class="line"><span class="lineno">  261</span>    <span class="keywordflow">switch</span> (align) {</div>
+<div class="line"><span class="lineno">  262</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6ae2a2a40aa173a6fbae51182a32bcb11b">ANGE_ALIGN_CENTER</a>: pad = (<a class="code hl_function" href="#a0bcf2364f90fbcac00266c9551d66834">getColSize</a>() - len) / 2; <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  263</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a3fe36352d441237d2e9855f827501bc1">ANGE_ALIGN_RIGHT</a>: pad = <a class="code hl_function" href="#a0bcf2364f90fbcac00266c9551d66834">getColSize</a>() - len; <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  264</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="#af793fa7cb080059db68c6373fabb4ea6a06ec7b428bbd9c73bd30d0e8aeafc3a9">ANGE_ALIGN_LEFT</a>: <span class="keywordflow">default</span>: pad = 0;</div>
+<div class="line"><span class="lineno">  265</span>    }</div>
+<div class="line"><span class="lineno">  266</span> </div>
+<div class="line"><span class="lineno">  267</span>    <span class="keywordflow">if</span> (pad &lt; 0) pad = 0;</div>
+<div class="line"><span class="lineno">  268</span>    printf(<span class="stringliteral">&quot;\n%*s%s\n&quot;</span>, pad, <span class="stringliteral">&quot;&quot;</span>, text);</div>
+<div class="line"><span class="lineno">  269</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  270</span>}</div>
+<div class="ttc" id="aange_8h_html_a0bcf2364f90fbcac00266c9551d66834"><div class="ttname"><a href="#a0bcf2364f90fbcac00266c9551d66834">getColSize</a></div><div class="ttdeci">static int getColSize()</div><div class="ttdoc">Returns integer value to terminal coloumn size.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00036">ange.h:36</a></div></div>
+<div class="ttc" id="aange_8h_html_ad8295217944f5e6b80379cd2d4f3645a"><div class="ttname"><a href="#ad8295217944f5e6b80379cd2d4f3645a">angeInit</a></div><div class="ttdeci">static void angeInit(void)</div><div class="ttdoc">Initializes the TUI by setting the terminal to raw mode and clearing the screen.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00155">ange.h:155</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00153">ANGE_ALIGN_CENTER</a>, <a class="el" href="ange_8h_source.html#l00152">ANGE_ALIGN_LEFT</a>, and <a class="el" href="ange_8h_source.html#l00154">ANGE_ALIGN_RIGHT</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00198">ANGE_ALIGN_CENTER</a>, <a class="el" href="ange_8h_source.html#l00197">ANGE_ALIGN_LEFT</a>, <a class="el" href="ange_8h_source.html#l00199">ANGE_ALIGN_RIGHT</a>, <a class="el" href="ange_8h_source.html#l00042">ange_initialized</a>, <a class="el" href="ange_8h_source.html#l00155">angeInit()</a>, and <a class="el" href="ange_8h_source.html#l00036">getColSize()</a>.</p>
 
 </div>
 </div>
@@ -1068,16 +1004,67 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00240">240</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  240</span>                                                   {</div>
-<div class="line"><span class="lineno">  241</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <a class="code hl_function" href="#ad8295217944f5e6b80379cd2d4f3645a">angeInit</a>();</div>
-<div class="line"><span class="lineno">  242</span> </div>
-<div class="line"><span class="lineno">  243</span>    printf(<span class="stringliteral">&quot;\033[H%s\n&quot;</span>, text);</div>
-<div class="line"><span class="lineno">  244</span>    fflush(stdout);</div>
-<div class="line"><span class="lineno">  245</span>}</div>
-<div class="ttc" id="aange_8h_html_ad8295217944f5e6b80379cd2d4f3645a"><div class="ttname"><a href="#ad8295217944f5e6b80379cd2d4f3645a">angeInit</a></div><div class="ttdeci">static void angeInit(void)</div><div class="ttdoc">Initializes the TUI by setting the terminal to raw mode and clearing the screen.</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00110">ange.h:110</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00280">280</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  280</span>                                                   {</div>
+<div class="line"><span class="lineno">  281</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="#a69109e9ae41ef8797b39d956726271cf">ange_initialized</a>) <a class="code hl_function" href="#ad8295217944f5e6b80379cd2d4f3645a">angeInit</a>();</div>
+<div class="line"><span class="lineno">  282</span> </div>
+<div class="line"><span class="lineno">  283</span>    printf(<span class="stringliteral">&quot;\033[H%s\n&quot;</span>, text);</div>
+<div class="line"><span class="lineno">  284</span>    fflush(stdout);</div>
+<div class="line"><span class="lineno">  285</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00035">ange_initialized</a>, and <a class="el" href="ange_8h_source.html#l00110">angeInit()</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00042">ange_initialized</a>, and <a class="el" href="ange_8h_source.html#l00155">angeInit()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00296">angePrintP_yAlign()</a>.</p>
+
+</div>
+</div>
+<a id="aa1584dc4f5c2938800a779f73f9fa4a0" name="aa1584dc4f5c2938800a779f73f9fa4a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1584dc4f5c2938800a779f73f9fa4a0">&#9670;&#160;</a></span>angePrintP_yAlign()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void angePrintP_yAlign </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>text</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>y_padding_amount</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Prints a paragraph of text with vertical alignment. </p>
+<p>Initializes the TUI if not already initialized (through angePrintP)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The null-terminated string to print. </td></tr>
+    <tr><td class="paramname">y_padding_amount</td><td>The amount of vertical (y-axis) padding to insert </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00296">296</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  296</span>                                                                      {</div>
+<div class="line"><span class="lineno">  297</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; y_padding_amount; ++i) {</div>
+<div class="line"><span class="lineno">  298</span>        printf(<span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><span class="lineno">  299</span>    }</div>
+<div class="line"><span class="lineno">  300</span>    <a class="code hl_function" href="#a07ce380cba0bf6674691eaf2bd9eba59">angePrintP_Unaligned</a>(text);</div>
+<div class="line"><span class="lineno">  301</span>}</div>
+<div class="ttc" id="aange_8h_html_a07ce380cba0bf6674691eaf2bd9eba59"><div class="ttname"><a href="#a07ce380cba0bf6674691eaf2bd9eba59">angePrintP_Unaligned</a></div><div class="ttdeci">static void angePrintP_Unaligned(const char *text)</div><div class="ttdoc">Prints a paragraph of text without any alignment (left aligned by default).</div><div class="ttdef"><b>Definition</b> <a href="ange_8h_source.html#l00280">ange.h:280</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00280">angePrintP_Unaligned()</a>.</p>
 
 </div>
 </div>
@@ -1108,88 +1095,175 @@ Variables</h2></td></tr>
 <p>This function supports arrow keys, Enter, Escape, and printable characters.</p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structange__input__t.html" title="Represents a keyboard input event.">ange_input_t</a> representing the pressed key. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00069">69</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                      {</div>
-<div class="line"><span class="lineno">   70</span>    <span class="keywordtype">char</span> c;</div>
-<div class="line"><span class="lineno">   71</span>    <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = { <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a>, 0 };</div>
-<div class="line"><span class="lineno">   72</span> </div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;c, 1) != 1) <span class="keywordflow">return</span> input;</div>
-<div class="line"><span class="lineno">   74</span> </div>
-<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\033&#39;</span>) {</div>
-<div class="line"><span class="lineno">   76</span>        <span class="keywordtype">char</span> seq[2];</div>
-<div class="line"><span class="lineno">   77</span>        <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;seq[0], 1) != 1) <span class="keywordflow">return</span> (<a class="code hl_struct" href="structange__input__t.html">ange_input_t</a>){ <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>, 0 };</div>
-<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;seq[1], 1) != 1) <span class="keywordflow">return</span> input;</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>        <span class="keywordflow">if</span> (seq[0] == <span class="charliteral">&#39;[&#39;</span>) {</div>
-<div class="line"><span class="lineno">   81</span>            <span class="keywordflow">switch</span> (seq[1]) {</div>
-<div class="line"><span class="lineno">   82</span>                <span class="keywordflow">case</span> <span class="charliteral">&#39;A&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   83</span>                <span class="keywordflow">case</span> <span class="charliteral">&#39;B&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   84</span>                <span class="keywordflow">case</span> <span class="charliteral">&#39;C&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   85</span>                <span class="keywordflow">case</span> <span class="charliteral">&#39;D&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   86</span>                <span class="keywordflow">default</span>: <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   87</span>            }</div>
-<div class="line"><span class="lineno">   88</span>        }</div>
-<div class="line"><span class="lineno">   89</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span> || c == <span class="charliteral">&#39;\r&#39;</span>) {</div>
-<div class="line"><span class="lineno">   90</span>        input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>;</div>
-<div class="line"><span class="lineno">   91</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c &gt;= 32 &amp;&amp; c &lt;= 126) {</div>
-<div class="line"><span class="lineno">   92</span>        input.<a class="code hl_variable" href="structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>;</div>
-<div class="line"><span class="lineno">   93</span>        input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> = c;</div>
-<div class="line"><span class="lineno">   94</span>    }</div>
-<div class="line"><span class="lineno">   95</span> </div>
-<div class="line"><span class="lineno">   96</span>    <span class="keywordflow">return</span> input;</div>
-<div class="line"><span class="lineno">   97</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00077">77</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>                                      {</div>
+<div class="line"><span class="lineno">   78</span>    <span class="keywordtype">char</span> c;</div>
+<div class="line"><span class="lineno">   79</span>    <a class="code hl_struct" href="structange__input__t.html">ange_input_t</a> input = { <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a4240d3c77b783a363afd98e956259c19">ANGE_KEY_UNKNOWN</a>, 0 };</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>    <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;c, 1) != 1) <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\033&#39;</span>) {</div>
+<div class="line"><span class="lineno">   84</span>        <span class="keywordtype">char</span> seq[3] = {0};</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>        fd_set set;</div>
+<div class="line"><span class="lineno">   87</span>        <span class="keyword">struct </span>timeval timeout;</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>        FD_ZERO(&amp;set);</div>
+<div class="line"><span class="lineno">   90</span>        FD_SET(STDIN_FILENO, &amp;set);</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>        timeout.tv_sec = 0;</div>
+<div class="line"><span class="lineno">   93</span>        timeout.tv_usec = 50000;</div>
+<div class="line"><span class="lineno">   94</span> </div>
+<div class="line"><span class="lineno">   95</span>        <span class="keywordtype">int</span> rv = select(STDIN_FILENO + 1, &amp;set, NULL, NULL, &amp;timeout);</div>
+<div class="line"><span class="lineno">   96</span>        <span class="keywordflow">if</span> (rv == 0) {</div>
+<div class="line"><span class="lineno">   97</span>            input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>;</div>
+<div class="line"><span class="lineno">   98</span>            input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> = 27;</div>
+<div class="line"><span class="lineno">   99</span>            <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  100</span>        }</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>        <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;seq[0], 1) != 1) {</div>
+<div class="line"><span class="lineno">  103</span>            input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>;</div>
+<div class="line"><span class="lineno">  104</span>            input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> = 27;</div>
+<div class="line"><span class="lineno">  105</span>            <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  106</span>        }</div>
+<div class="line"><span class="lineno">  107</span>        <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;seq[1], 1) != 1) {</div>
+<div class="line"><span class="lineno">  108</span>            input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961adb0557e2ef4fd108657071472e9a62a3">ANGE_KEY_ESCAPE</a>;</div>
+<div class="line"><span class="lineno">  109</span>            input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> = 27;</div>
+<div class="line"><span class="lineno">  110</span>            <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  111</span>        }</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>        <span class="keywordflow">if</span> (seq[0] == <span class="charliteral">&#39;[&#39;</span>) {</div>
+<div class="line"><span class="lineno">  114</span>            <span class="keywordflow">if</span> (seq[1] &gt;= <span class="charliteral">&#39;0&#39;</span> &amp;&amp; seq[1] &lt;= <span class="charliteral">&#39;9&#39;</span>) {</div>
+<div class="line"><span class="lineno">  115</span>                <span class="keywordflow">if</span> (read(STDIN_FILENO, &amp;seq[2], 1) != 1) <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  116</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  117</span>                <span class="keywordflow">switch</span> (seq[1]) {</div>
+<div class="line"><span class="lineno">  118</span>                    <span class="keywordflow">case</span> <span class="charliteral">&#39;A&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ac62c3b1a9b9b246013308e54cd2a2555">ANGE_KEY_ARROW_UP</a>; <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  119</span>                    <span class="keywordflow">case</span> <span class="charliteral">&#39;B&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a87cf83652af7497687ddbf3eeacbdfb4">ANGE_KEY_ARROW_DOWN</a>; <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  120</span>                    <span class="keywordflow">case</span> <span class="charliteral">&#39;C&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961af143a74be4958449d26640624d9fa711">ANGE_KEY_ARROW_RIGHT</a>; <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  121</span>                    <span class="keywordflow">case</span> <span class="charliteral">&#39;D&#39;</span>: input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aaa80932a52f5bdd4e0ecfa7cea61e5be">ANGE_KEY_ARROW_LEFT</a>; <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  122</span>                    <span class="keywordflow">default</span>: <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  123</span>                }</div>
+<div class="line"><span class="lineno">  124</span>            }</div>
+<div class="line"><span class="lineno">  125</span>        }</div>
+<div class="line"><span class="lineno">  126</span> </div>
+<div class="line"><span class="lineno">  127</span>        <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  128</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == <span class="stringliteral">&#39;\177&#39;</span>) {</div>
+<div class="line"><span class="lineno">  129</span>        input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961a2152d21b1ee1d7b4ba2d511c0b12cd8a">ANGE_KEY_BACKSPACE</a>;</div>
+<div class="line"><span class="lineno">  130</span>        input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> = 127;</div>
+<div class="line"><span class="lineno">  131</span>        <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  132</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span> || c == <span class="charliteral">&#39;\r&#39;</span>) {</div>
+<div class="line"><span class="lineno">  133</span>        input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961aa75b2b95480905fb88a6d76ad5c62ec9">ANGE_KEY_ENTER</a>;</div>
+<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  135</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c &gt;= 32 &amp;&amp; c &lt;= 126) {</div>
+<div class="line"><span class="lineno">  136</span>        input.<a class="code hl_variable" href="structange__input__t.html#af92a68cffe90402a36cc845445cc1c1c">type</a> = <a class="code hl_enumvalue" href="#a2fb03dab3b13f314a48f48c2107a1961ad71c10bea7a430da110d1832a2219110">ANGE_KEY_CHAR</a>;</div>
+<div class="line"><span class="lineno">  137</span>        input.<a class="code hl_variable" href="structange__input__t.html#ad689679e39580dd6ece0874af1be6608">ch</a> = c;</div>
+<div class="line"><span class="lineno">  138</span>        <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  139</span>    }</div>
+<div class="line"><span class="lineno">  140</span> </div>
+<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  142</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ange_8h_source.html#l00046">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00047">ANGE_KEY_ARROW_LEFT</a>, <a class="el" href="ange_8h_source.html#l00048">ANGE_KEY_ARROW_RIGHT</a>, <a class="el" href="ange_8h_source.html#l00045">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00050">ANGE_KEY_CHAR</a>, <a class="el" href="ange_8h_source.html#l00044">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00049">ANGE_KEY_ESCAPE</a>, <a class="el" href="ange_8h_source.html#l00043">ANGE_KEY_UNKNOWN</a>, <a class="el" href="ange_8h_source.html#l00059">ange_input_t::ch</a>, and <a class="el" href="ange_8h_source.html#l00058">ange_input_t::type</a>.</p>
+<p class="reference">References <a class="el" href="ange_8h_source.html#l00054">ANGE_KEY_ARROW_DOWN</a>, <a class="el" href="ange_8h_source.html#l00055">ANGE_KEY_ARROW_LEFT</a>, <a class="el" href="ange_8h_source.html#l00056">ANGE_KEY_ARROW_RIGHT</a>, <a class="el" href="ange_8h_source.html#l00053">ANGE_KEY_ARROW_UP</a>, <a class="el" href="ange_8h_source.html#l00052">ANGE_KEY_BACKSPACE</a>, <a class="el" href="ange_8h_source.html#l00058">ANGE_KEY_CHAR</a>, <a class="el" href="ange_8h_source.html#l00051">ANGE_KEY_ENTER</a>, <a class="el" href="ange_8h_source.html#l00057">ANGE_KEY_ESCAPE</a>, <a class="el" href="ange_8h_source.html#l00050">ANGE_KEY_UNKNOWN</a>, <a class="el" href="ange_8h_source.html#l00067">ange_input_t::ch</a>, and <a class="el" href="ange_8h_source.html#l00066">ange_input_t::type</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00471">angeDrawNavbar()</a>, <a class="el" href="ange_8h_source.html#l00405">angeDrawTextbox()</a>, <a class="el" href="ange_8h_source.html#l00270">angeInputButton()</a>, <a class="el" href="ange_8h_source.html#l00321">angeInputCheckboxes()</a>, and <a class="el" href="ange_8h_source.html#l00363">angeInputRadio()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00490">angeDrawNavbar()</a>, <a class="el" href="ange_8h_source.html#l00425">angeDrawTextbox()</a>, <a class="el" href="ange_8h_source.html#l00352">angeInputButton()</a>, and <a class="el" href="ange_8h_source.html#l00383">angeInputRadio()</a>.</p>
 
 </div>
 </div>
-<a id="af05ba9ca336b98cd29c5242f4d4098d8" name="af05ba9ca336b98cd29c5242f4d4098d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af05ba9ca336b98cd29c5242f4d4098d8">&#9670;&#160;</a></span>RestoreCur()</h2>
+<a id="a0bcf2364f90fbcac00266c9551d66834" name="a0bcf2364f90fbcac00266c9551d66834"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bcf2364f90fbcac00266c9551d66834">&#9670;&#160;</a></span>getColSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void RestoreCur </td>
+          <td class="memname">static int getColSize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns integer value to terminal coloumn size. </p>
+
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00036">36</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>                        {</div>
+<div class="line"><span class="lineno">   37</span>    <span class="keywordflow">return</span> atoi(getenv(<span class="stringliteral">&quot;COLOUMNS&quot;</span>));</div>
+<div class="line"><span class="lineno">   38</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00255">angePrintP()</a>.</p>
+
+</div>
+</div>
+<a id="a2e1c1a6d6b1ff63910e5211fb1e43ccc" name="a2e1c1a6d6b1ff63910e5211fb1e43ccc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e1c1a6d6b1ff63910e5211fb1e43ccc">&#9670;&#160;</a></span>RestoreCurPos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void RestoreCurPos </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>(Development use) Restores the cursor position previously saved. </p>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00029">29</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   29</span>                  {</div>
-<div class="line"><span class="lineno">   30</span>    printf(<span class="stringliteral">&quot;\033[u&quot;</span>);</div>
-<div class="line"><span class="lineno">   31</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00030">30</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   30</span>                            {</div>
+<div class="line"><span class="lineno">   31</span>    printf(<span class="stringliteral">&quot;\033[u&quot;</span>);</div>
+<div class="line"><span class="lineno">   32</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="aedad6dd410b289ba1d10f3995e575d73" name="aedad6dd410b289ba1d10f3995e575d73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aedad6dd410b289ba1d10f3995e575d73">&#9670;&#160;</a></span>SaveCurPos()</h2>
+<a id="a39aa811600c79445f7d4d7f051bb7218" name="a39aa811600c79445f7d4d7f051bb7218"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39aa811600c79445f7d4d7f051bb7218">&#9670;&#160;</a></span>SaveCurPos()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void SaveCurPos </td>
+          <td class="memname">static void SaveCurPos </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>(Development use) Saves the current cursor position in the terminal. </p>
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00023">23</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   23</span>                  {</div>
-<div class="line"><span class="lineno">   24</span>    printf(<span class="stringliteral">&quot;\033[s&quot;</span>);</div>
-<div class="line"><span class="lineno">   25</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00024">24</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   24</span>                         {</div>
+<div class="line"><span class="lineno">   25</span>    printf(<span class="stringliteral">&quot;\033[s&quot;</span>);</div>
+<div class="line"><span class="lineno">   26</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1214,9 +1288,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00035">35</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00042">42</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00110">angeInit()</a>, <a class="el" href="ange_8h_source.html#l00135">angeKill()</a>, and <a class="el" href="ange_8h_source.html#l00240">angePrintP_Unaligned()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00155">angeInit()</a>, <a class="el" href="ange_8h_source.html#l00180">angeKill()</a>, <a class="el" href="ange_8h_source.html#l00255">angePrintP()</a>, and <a class="el" href="ange_8h_source.html#l00280">angePrintP_Unaligned()</a>.</p>
 
 </div>
 </div>
@@ -1240,9 +1314,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00034">34</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ange_8h_source.html#l00041">41</a> of file <a class="el" href="ange_8h_source.html">ange.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00110">angeInit()</a>, and <a class="el" href="ange_8h_source.html#l00135">angeKill()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ange_8h_source.html#l00155">angeInit()</a>, and <a class="el" href="ange_8h_source.html#l00180">angeKill()</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['tui_5forig_5ftermios_0',['tui_orig_termios',['../ange_8h.html#a691a57e8ed4016cc92dfa3fedd7ad330',1,'ange.h']]],
-  ['type_1',['type',['../structange__input__t.html#a1e561e6509514d14e8ba2bfe8278f871',1,'ange_input_t']]]
+  ['savecurpos_0',['SaveCurPos',['../ange_8h.html#a39aa811600c79445f7d4d7f051bb7218',1,'ange.h']]],
+  ['selected_1',['selected',['../structange__button__t.html#a3cb8f6c6c68753b53ac62c498a3682c6',1,'ange_button_t']]],
+  ['selected_5findex_2',['selected_index',['../structange__radio__group__t.html#a616ace6c9cceb2cbd8a393cbddcf6eee',1,'ange_radio_group_t']]]
 ];

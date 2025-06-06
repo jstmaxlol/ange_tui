@@ -1,6 +1,6 @@
 // ange_tui (ANGE)
 // repo: github.com/jstmaxlol/ange_tui
-// version: 1.2
+// version: 1.3
 
 #ifndef ANGE
 #define ANGE
@@ -21,14 +21,22 @@ extern "C" {
 /**
  * @brief (Development use) Saves the current cursor position in the terminal.
  */
-void SaveCurPos() {
+static void SaveCurPos() {
     printf("\033[s");
 }
 /**
  * @brief (Development use) Restores the cursor position previously saved.
  */
-void RestoreCurPos() {
+static void RestoreCurPos() {
     printf("\033[u");
+}
+/**
+ * @brief Returns integer value to terminal coloumn size
+ */
+static int getColSize() {
+    const char* env = getenv("COLUMNS");
+    if (!env) return 80; // fallback to 80 columns if not set
+    return atoi(env);
 }
 
 // Internal state
@@ -245,17 +253,17 @@ void angeClear() {
  * 
  * @param text The null-terminated string to print.
  * @param align The alignment mode (left, center, right).
- * @param term_width The width of the terminal in characters.
  */
-static void angePrintP(const char* text, ange_align_t align, int term_width) {
+static void angePrintP(const char* text, ange_align_t align) {
     if (!ange_initialized) angeInit();
+    const int colsize = getColSize();
 
     int len = strlen(text);
     int pad = 0;
 
     switch (align) {
-        case ANGE_ALIGN_CENTER: pad = (term_width - len) / 2; break;
-        case ANGE_ALIGN_RIGHT: pad = term_width - len; break;
+        case ANGE_ALIGN_CENTER: pad = (colsize - len) / 2; break;
+        case ANGE_ALIGN_RIGHT: pad = colsize - len; break;
         case ANGE_ALIGN_LEFT: default: pad = 0;
     }
 
@@ -327,7 +335,7 @@ static void angeDrawButton(ange_button_t* buttons, int count, int selected_index
     printf("\033[H");
     for (int i = 0; i < count; i++) {
         if (i == selected_index)
-            printf("[ %s ]\n", buttons[i].label);
+            printf("> [ %s ]\n", buttons[i].label);
         else
             printf("[ %s ]\n", buttons[i].label);
     }
