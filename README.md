@@ -1,11 +1,6 @@
-# ⚠️ NOT PRODUCTION-READY ⚠️
-this banner will be updated as developing goes on. \
-i **do not** recommend trying to use ange_tui in its current state for basically *anything* because any update at any time during this development phase **might be** completely rewriting functions carelessly. \
-you have been warned <3
-
-<hr>
-
 ![banner2x](https://github.com/user-attachments/assets/88aab9f6-6808-44d4-b34d-9ca232ee03e9)
+
+> ⚠️ NOT PRODUCTION-READY ⚠️
 
 <!DOCTYPE html>
 <body>
